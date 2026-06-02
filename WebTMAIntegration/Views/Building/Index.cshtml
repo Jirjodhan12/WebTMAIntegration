@@ -1,0 +1,127 @@
+﻿@model PagedResponseModel<BuildingDto>
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">Buildings</h2>
+
+    @if (Model?.Data != null && Model.Data.Any())
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>Facility Code</th>
+                        <th>Division Id</th>
+                        <th>Building Type</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Region Id</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Modified By</th>
+                        <th>Modified Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+
+                            <td>@item.Id</td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.FacilityCode)
+                                    ? "TEST-FACILITY"
+                                    : item.FacilityCode)
+                            </td>
+
+                            <td>
+                                @(item.DivisionId ?? 1)
+                            </td>
+
+                            <td>
+                                @item.BuildingTypeId
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Code)
+                                    ? "TEST-CODE"
+                                    : item.Code)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Name)
+                                    ? "Test Building"
+                                    : item.Name)
+                            </td>
+
+                            <td>
+                                @(
+                                    string.IsNullOrWhiteSpace(item.Address1) &&
+                                    string.IsNullOrWhiteSpace(item.Address2)
+                                    ? "-"
+                                    : $"{item.Address1} {item.Address2}".Trim()
+                                    )
+                            </td>
+
+                            
+
+                            <td>
+                                @(item.RegionId ?? 1)
+                            </td>
+
+                            <td>
+                                @item.CreatorId
+                            </td>
+
+                            <td>
+                                @(item.CreatedDate?.ToString("dd-MMM-yyyy") ?? "")
+                            </td>
+
+                            <td>
+                                @(item.ModifierId ?? 1)
+                            </td>
+
+                            <td>
+                                @(item.ModifiedDate?.ToString("dd-MMM-yyyy") ?? "-")
+                            </td>
+
+                            <td>
+                        @if (item.Active)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No building records found.
+        </div>
+    }
+
+</div>

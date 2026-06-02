@@ -1,0 +1,117 @@
+# =========================
+# Visual Studio 2022
+# =========================
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio cache
+.vscode/
+*.VC.db
+*.VC.VC.opendb
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# NuGet Packages folder (PackageReference projects)
+**/packages/*
+!**/packages/build/
+
+# Restore information
+project.assets.json
+project.nuget.cache
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# IIS Express
+/.vs/config/
+iisexpress/
+*.dbmdl
+
+# Entity Framework
+*.edmx.diagram
+
+# SQL Server
+*.mdf
+*.ldf
+
+# Publish output
+PublishProfiles/
+*.publishsettings
+
+# Azure
+*.azurePubxml
+*.pubxml
+*.publish.xml
+
+# Logs
+*.log
+
+# Test Results
+TestResults/
+*.trx
+
+# ReSharper
+_ReSharper*/
+*.ReSharper
+*.DotSettings.user
+
+# Rider
+.idea/
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# Coverage reports
+coverage/
+*.coverage
+*.coveragexml
+
+# StyleCop
+StyleCopReport.xml
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# Node.js (if frontend assets are included)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Web publish output
+wwwroot/dist/
+wwwroot/lib/
+
+# Generated files
+Generated_Code/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

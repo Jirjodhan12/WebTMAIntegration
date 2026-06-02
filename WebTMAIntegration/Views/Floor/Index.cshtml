@@ -1,0 +1,105 @@
+﻿@model PagedResponseModel<FloorDto>
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">Floors</h2>
+
+    @if (Model?.Data != null && Model.Data.Any())
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>Building Id</th>
+                        <th>Floor Type</th>
+                        <th>Floor Unique Id</th>
+                        <th>Name</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Modified By</th>
+                        <th>Modified Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+
+                            <td>
+                                @(item.Id ?? 1)
+                            </td>
+
+                            <td>
+                                @(item.BuildingId ?? 1)
+                            </td>
+
+                            <td>
+                                @(item.FloorTypeId ?? 1)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.FloorUniqueId)
+                                                        ? "TEST-FLOOR"
+                                                        : item.FloorUniqueId)
+                                                                         </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Name)
+                                                        ? "Test Floor"
+                                                        : item.Name)
+                    </td>
+
+                            <td>
+                                @(item.CreatorId ?? 1)
+                            </td>
+
+                            <td>
+                                @(item.CreatedDate?.ToString("dd-MMM-yyyy") ?? "-")
+                            </td>
+
+                            <td>
+                                @(item.ModifierId ?? 1)
+                            </td>
+
+                            <td>
+                                @(item.ModifiedDate?.ToString("dd-MMM-yyyy") ?? "-")
+                            </td>
+
+                            <td>
+                        @if (item.Active ?? false)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No floor records found.
+        </div>
+    }
+
+</div>

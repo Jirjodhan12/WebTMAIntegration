@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewData["Title"] = "Master Sync";
+}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold">Master Data Sync</h1>
+        <p class="text-muted">
+            Sync API data into local database
+        </p>
+    </div>
+
+    @* Success Message *@
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+    }
+
+    @* Error Message *@
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+        </div>
+    }
+
+    <div class="row justify-content-center mt-4">
+
+        @* Campus Sync *@
+        <div class="col-md-3 mb-3">
+            <form asp-controller="Site"
+                  asp-action="Sync"
+                  method="post">
+
+                <button type="submit"
+                        class="btn btn-primary w-100 p-3 shadow-sm">
+
+                    Sync Campus
+
+                </button>
+            </form>
+        </div>
+
+        @* Building Sync *@
+        <div class="col-md-3 mb-3">
+            <form asp-controller="Building"
+                  asp-action="Sync"
+                  method="post">
+
+                <button type="submit"
+                        class="btn btn-success w-100 p-3 shadow-sm">
+
+                    Sync Building
+
+                </button>
+            </form>
+        </div>
+
+        @* Floor Sync *@
+        <div class="col-md-3 mb-3">
+            <form asp-controller="Floor"
+                  asp-action="Sync"
+                  method="post">
+
+                <button type="submit"
+                        class="btn btn-warning w-100 p-3 shadow-sm">
+
+                    Sync Floor
+
+                </button>
+            </form>
+        </div>
+
+        @* Room Sync *@
+        <div class="col-md-3 mb-3">
+            <form asp-controller="Wing"
+                  asp-action="Sync"
+                  method="post">
+
+                <button type="submit"
+                        class="btn btn-danger w-100 p-3 shadow-sm">
+
+                    Sync Room
+
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>

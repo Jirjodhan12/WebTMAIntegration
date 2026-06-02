@@ -1,0 +1,112 @@
+﻿@model PagedResponseModel<WingDto>
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">Rooms</h2>
+
+    @if (Model?.Data != null && Model.Data.Any())
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>Floor Id</th>
+                        <th>Wing Name</th>
+                        <th>Area Type</th>
+                        <th>Code</th>
+                        <th>Floor Code</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th>Modified By</th>
+                        <th>Modified Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.Id
+                            </td>
+
+                            <td>
+                                @(item.FloorId ?? 1)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Name)
+                                                        ? "Test Wing"
+                                                        : item.Name)
+                                                                </td>
+
+                            <td>
+                                @(item.AreaTypeId ?? 1)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Code)
+                                                        ? "TEST-CODE"
+                                                        : item.Code)
+                                                                </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.FloorCode)
+                                                        ? "TEST-FLOOR"
+                                                        : item.FloorCode)
+                    </td>
+
+                            <td>
+                                @(item.CreatorId ?? 1)
+                            </td>
+
+                            <td>
+                                @(item.CreatedDate?.ToString("dd-MMM-yyyy") ?? "-")
+                            </td>
+
+                            <td>
+                                @(item.ModifierId ?? 1)
+                            </td>
+
+                            <td>
+                                @(item.ModifiedDate?.ToString("dd-MMM-yyyy") ?? "-")
+                            </td>
+
+                            <td>
+                        @if (item.Active ?? false)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No wing records found.
+        </div>
+    }
+
+</div>

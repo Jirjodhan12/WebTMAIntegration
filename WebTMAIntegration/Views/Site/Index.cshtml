@@ -1,0 +1,81 @@
+﻿@model List<SiteViewModel>
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">Campus</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Site Type</th>
+                        <th>Region</th>
+                        <th>Campus Name</th>
+                        <th>Campus Code</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.SiteType)  ? "-" : item.SiteType)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Region) ? "-" : item.Region)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.CampusName)  ? "-" : item.CampusName)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.CampusCode)   ? "-"  : item.CampusCode)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Description) ? "-" : item.Description)
+                            </td>
+
+                            <td>
+                                @if (item.Status)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No site records found.
+        </div>
+    }
+
+</div>
