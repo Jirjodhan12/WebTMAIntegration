@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebTMAIntegration.Data;
 using WebTMAIntegration.Data.Interfaces;
 using WebTMAIntegration.Models;
 using WebTMAIntegration.Models.Mappers;
@@ -18,40 +19,18 @@ namespace WebTMAIntegration.Controllers
             _buildingRepository = buildingRepository;
         }
 
-        public async Task<IActionResult> Index(
-            int pageIndex = 0,
-            int pageSize = 100)
+        public async Task<IActionResult> Index()
         {
             try
             {
-                var columns = new List<string>
-                {
-                    "id",
-                    "facilityCode",
-                    "divisionId",
-                    "buildingTypeId",
-                    "address1",
-                    "address2",
-                    "code",
-                    "name",
-                    "active",
-                    "regionId",
-                    "creatorId",
-                    "createdDate",
-                    "modifierId",
-                    "modifiedDate"
-                };
-
-                var buildings = await _buildingService
-                    .GetBuildingAsync(pageIndex, pageSize, columns);
-
+                var buildings = await _buildingRepository.GetBuildingsAsync();
                 return View(buildings);
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.InnerException?.Message ?? ex.Message;
 
-                return View(new PagedResponseModel<SiteViewModel>());
+                return View(new List<BuildingViewModel>());
             }
         }
 
@@ -65,6 +44,7 @@ namespace WebTMAIntegration.Controllers
                 {
                     "id",
                     "facilityCode",
+                    "facilityId",
                     "divisionId",
                     "buildingTypeId",
                     "address1",
@@ -75,8 +55,6 @@ namespace WebTMAIntegration.Controllers
                     "regionId",
                     "creatorId",
                     "createdDate",
-                    "modifierId",
-                    "modifiedDate"
                 };
 
                 var buildings = await _buildingService.GetBuildingAsync(pageIndex, pageSize, columns);

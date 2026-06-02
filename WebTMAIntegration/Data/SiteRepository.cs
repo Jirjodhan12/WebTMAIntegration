@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Net;
 using WebTMAIntegration.Data.Helpers;
 using WebTMAIntegration.Data.Interfaces;
-using WebTMAIntegration.Models;
 using WebTMAIntegration.Models.Entities;
 using WebTMAIntegration.ViewModels;
 
@@ -70,10 +67,6 @@ namespace WebTMAIntegration.Data
                             Value = site.IsActive
                         },
 
-                        new SqlParameter("@IsInternal", SqlDbType.Bit)
-                        {
-                            Value = site.IsInternal
-                        },
                         new SqlParameter("@StateId", SqlDbType.Int)
                         {
                             Value = site.@StateId
@@ -98,27 +91,14 @@ namespace WebTMAIntegration.Data
                         {
                             Value = site.CreatedBy
                         },
-                        new SqlParameter("@IsSyncRequired", SqlDbType.Bit)
-                        {
-                            Value = site.IsSyncRequired
-                        },
-                     
-                        new SqlParameter("@newId", SqlDbType.Int)
-                        {
-                            Direction = ParameterDirection.Output
-                        }
                     };
 
                     int rows = await _db.ExecuteNonQueryAsync(
-                        query: "Insert_Sites",
+                        query: "usp_InsertSite",
                         commandType: CommandType.StoredProcedure,
                         parameters: parameters,
                         connection: conn,
                         transaction: transaction
-                    );
-
-                    int insertedId = Convert.ToInt32(
-                        parameters.First(p => p.ParameterName == "@newId").Value
                     );
 
                     totalRowsAffected += rows;
@@ -139,7 +119,7 @@ namespace WebTMAIntegration.Data
         {
             DataTable dt =
                 await _db.ExecuteQueryAsync(
-                    "Get_Sites_Test",
+                    "usp_GetSites",
                     CommandType.StoredProcedure
                 );
 
@@ -154,17 +134,22 @@ namespace WebTMAIntegration.Data
             {
                 buildings.Add(new SiteViewModel
                 {
-                    SiteType = "OnSite",
+                    SiteId = Convert.ToInt32(row["SiteId"]),
 
-                    Region = "East Region",
+                    RegionsId = Convert.ToInt32(row["RegionsId"]),
 
-                    CampusName = row["Name"]?.ToString(),
+                    Name = row["Name"]?.ToString(),
 
-                    CampusCode = row["Code"]?.ToString(),
+                    Code = row["Code"]?.ToString(),
 
                     Description = row["Description"]?.ToString(),
 
-                    Status = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"])
+                    IsActive = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"]),
+
+                    Address = row["Address"]?.ToString(),
+
+                    CreatedDate = (DateTime)row["CreatedDate"] 
+
                 });
             }
 

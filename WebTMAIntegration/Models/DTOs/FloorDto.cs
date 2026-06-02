@@ -17,10 +17,5 @@
 
         public int? CreatorId { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
-
-        public int? ModifierId { get; set; }
-
-        public DateTime? ModifiedDate { get; set; }
     }
 }

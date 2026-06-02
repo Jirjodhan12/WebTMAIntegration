@@ -3,6 +3,7 @@ using System.Data;
 using WebTMAIntegration.Data.Helpers;
 using WebTMAIntegration.Data.Interfaces;
 using WebTMAIntegration.Models.Entities;
+using WebTMAIntegration.ViewModels;
 
 namespace WebTMAIntegration.Data
 {
@@ -33,28 +34,28 @@ namespace WebTMAIntegration.Data
                 {
                     SqlParameter[] parameters =
                     {
-                        new SqlParameter("@WingName", SqlDbType.NVarChar, 250)
-                        {
-                            Value = string.IsNullOrWhiteSpace(wing.WingName)
-                                ? "Test Wing"
-                                : wing.WingName
-                        },
-
-                        new SqlParameter("@CreatedBy", SqlDbType.Int)
-                        {
-                            Value = wing.CreatedBy ?? 1
-                        },
-
-                        new SqlParameter("@floorId", SqlDbType.Int)
-                        {
-                            Value = wing.FloorId ?? 1
-                        },
-
                         new SqlParameter("@WingId", SqlDbType.Int)
                         {
                             Value = wing.WingId == 0
                                 ? (object)DBNull.Value
                                 : wing.WingId
+                        },
+
+                        new SqlParameter("@FloorId", SqlDbType.Int)
+                        {
+                            Value = wing.FloorId ?? 1
+                        },
+
+                        new SqlParameter("@WingName", SqlDbType.NVarChar, 200)
+                        {
+                            Value = string.IsNullOrWhiteSpace(wing.WingName)
+                                ? (object)DBNull.Value
+                                : wing.WingName
+                        },
+
+                        new SqlParameter("@IsActive", SqlDbType.Bit)
+                        {
+                            Value = wing.IsActive ?? false
                         },
 
                         new SqlParameter("@WingType", SqlDbType.Int)
@@ -65,37 +66,31 @@ namespace WebTMAIntegration.Data
                         new SqlParameter("@Code", SqlDbType.NVarChar, 50)
                         {
                             Value = string.IsNullOrWhiteSpace(wing.Code)
-                                ? "TEST-CODE"
+                                ? (object)DBNull.Value
                                 : wing.Code
                         },
 
-                        new SqlParameter("@IsActive", SqlDbType.Bit)
+                        new SqlParameter("@FloorCode", SqlDbType.NVarChar, 50)
                         {
-                            Value = wing.IsActive ?? false
+                            Value = string.IsNullOrWhiteSpace(wing.FloorCode)
+                                ? (object)DBNull.Value
+                                : wing.FloorCode
                         },
 
-                        new SqlParameter("@IsSyncRequired", SqlDbType.Bit)
+                        new SqlParameter("@CreatedBy", SqlDbType.Int)
                         {
-                            Value = wing.IsSyncRequired ?? false
-                        },
-
-                        new SqlParameter("@newId", SqlDbType.Int)
-                        {
-                            Direction = ParameterDirection.Output
+                            Value = wing.CreatedBy ?? 1
                         }
                     };
 
                     int rows = await _db.ExecuteNonQueryAsync(
-                        query: "Insert_Wing",
+                        query: "usp_InsertWing",
                         commandType: CommandType.StoredProcedure,
                         parameters: parameters,
                         connection: conn,
                         transaction: transaction
                     );
 
-                    int insertedId = Convert.ToInt32(
-                        parameters.First(p => p.ParameterName == "@newId").Value
-                    );
 
                     totalRowsAffected += rows;
                 }
@@ -109,6 +104,59 @@ namespace WebTMAIntegration.Data
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<List<WingViewModel>> GetWingsAsync()
+        {
+            DataTable dt =
+                await _db.ExecuteQueryAsync(
+                    "usp_GetWings",
+                    CommandType.StoredProcedure
+                );
+
+            List<WingViewModel> wings =
+                new List<WingViewModel>();
+
+            if (dt.Rows.Count == 0)
+            {
+                return wings;
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                wings.Add(new WingViewModel
+                {
+                    WingId = row["WingId"] != DBNull.Value
+                        ? Convert.ToInt32(row["WingId"]) : 0,
+
+                    SiteName = row["SiteName"]?.ToString(),
+
+                    SiteCode = row["SiteCode"]?.ToString(),
+
+                    BuildingName = row["BuildingName"]?.ToString(),
+
+                    BuildingCode = row["BuildingCode"]?.ToString(),
+
+                    FloorCode = row["FloorCode"]?.ToString(),
+
+                    FloorName = row["FloorName"]?.ToString(),
+
+                    WingName = row["WingName"]?.ToString(),
+                    WingType = row["WingType"]?.ToString(),
+                    Code = row["Code"]?.ToString(),
+
+                    Address = row["Address"]?.ToString(),
+
+                    IsActive = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"]),
+
+                    CreatedBy = row["CreatedBy"] != DBNull.Value
+                        ? Convert.ToInt32(row["CreatedBy"]) : 0,
+
+                    CreateDate = (DateTime)row["CreatedDate"]
+                });
+            }
+
+            return wings;
         }
 
     }

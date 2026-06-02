@@ -15,7 +15,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<UIHealthCareSettings>(
     builder.Configuration.GetSection("UIHealthCare"));
 
-builder.Services.AddHttpClient<ITokenService, TokenService>();
+builder.Services.AddSingleton<ITokenService, TokenService>();
 
 // UihealthcareClient is wrapped in HttpClient factory for connection pooling
 builder.Services.AddHttpClient<UIHealthCareClient>();

@@ -11,13 +11,7 @@
         public string? FloorName { get; set; }
         public int? Sequence { get; set; }
         public bool? IsActive { get; set; }
-
         public int? CreatedBy { get; set; }
-        public DateTime? CreateDate { get; set; }
-        public int? UpdatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public bool? IsSyncRequired { get; set; }
-        public bool? IsBuildingFloor { get; set; }
   
     }
 }

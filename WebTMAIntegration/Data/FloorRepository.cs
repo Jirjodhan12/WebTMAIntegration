@@ -3,6 +3,7 @@ using System.Data;
 using WebTMAIntegration.Data.Helpers;
 using WebTMAIntegration.Data.Interfaces;
 using WebTMAIntegration.Models.Entities;
+using WebTMAIntegration.ViewModels;
 
 namespace WebTMAIntegration.Data
 {
@@ -33,23 +34,19 @@ namespace WebTMAIntegration.Data
                 {
                     SqlParameter[] parameters =
                     {
-                        new SqlParameter("@FloorName", SqlDbType.NVarChar, 100)
+                        new SqlParameter("@FloorId", SqlDbType.Int)
                         {
-                            Value = string.IsNullOrWhiteSpace(floor.FloorName)
-                                ? (object)DBNull.Value
-                                : floor.FloorName
+                            Value = floor.FloorId
                         },
 
-                        new SqlParameter("@BuildingID", SqlDbType.Int)
+                        new SqlParameter("@BuildingId", SqlDbType.Int)
                         {
                             Value = floor.BuildingId ?? 0
                         },
 
-                        new SqlParameter("@BuildingCode", SqlDbType.NVarChar, 50)
+                        new SqlParameter("@FloorTypeId", SqlDbType.Int)
                         {
-                            Value = string.IsNullOrWhiteSpace(floor.BuildingCode)
-                                ? (object)DBNull.Value
-                                : floor.BuildingCode
+                            Value = floor.FloorTypeId ?? 1
                         },
 
                         new SqlParameter("@FloorCode", SqlDbType.NVarChar, 50)
@@ -59,19 +56,11 @@ namespace WebTMAIntegration.Data
                                 : floor.FloorCode
                         },
 
-                        new SqlParameter("@ImagePath", SqlDbType.NVarChar, 500)
+                        new SqlParameter("@BuildingCode", SqlDbType.NVarChar, 50)
                         {
-                            Value = DBNull.Value
-                        },
-
-                        new SqlParameter("@FileName", SqlDbType.NVarChar, 100)
-                        {
-                            Value = DBNull.Value
-                        },
-
-                        new SqlParameter("@CreatedBy", SqlDbType.Int)
-                        {
-                            Value = floor.CreatedBy ?? 0
+                            Value = string.IsNullOrWhiteSpace(floor.BuildingCode)
+                                ? (object)DBNull.Value
+                                : floor.BuildingCode
                         },
 
                         new SqlParameter("@Alias", SqlDbType.NVarChar, 10)
@@ -81,14 +70,16 @@ namespace WebTMAIntegration.Data
                                 : floor.Alias
                         },
 
-                        new SqlParameter("@FloorTypeId", SqlDbType.Int)
+                        new SqlParameter("@FloorName", SqlDbType.NVarChar, 100)
                         {
-                            Value = floor.FloorTypeId ?? 1
+                            Value = string.IsNullOrWhiteSpace(floor.FloorName)
+                                ? (object)DBNull.Value
+                                : floor.FloorName
                         },
 
-                        new SqlParameter("@EffectiveDate", SqlDbType.DateTime)
+                        new SqlParameter("@Sequence", SqlDbType.NVarChar, 10)
                         {
-                            Value = floor.CreateDate ?? (object)DBNull.Value
+                            Value = 1
                         },
 
                         new SqlParameter("@IsActive", SqlDbType.Bit)
@@ -96,33 +87,21 @@ namespace WebTMAIntegration.Data
                             Value = floor.IsActive ?? false
                         },
 
-                        new SqlParameter("@newId", SqlDbType.Int)
+                        new SqlParameter("@CreatedBy", SqlDbType.Int)
                         {
-                            Direction = ParameterDirection.Output
-                        },
-
-                        new SqlParameter("@Sequence", SqlDbType.NVarChar, 10)
-                        {
-                            Value = floor.Sequence?.ToString() ?? (object)DBNull.Value
-                        },
-
-                        new SqlParameter("@IsSyncRequired", SqlDbType.Bit)
-                        {
-                            Value = floor.IsSyncRequired ?? (object)DBNull.Value
+                            Value = floor.CreatedBy ?? 0
                         }
+
                     };
 
                     int rows = await _db.ExecuteNonQueryAsync(
-                        query: "Insert_Floor",
+                        query: "usp_InsertFloor",
                         commandType: CommandType.StoredProcedure,
                         parameters: parameters,
                         connection: conn,
                         transaction: transaction
                     );
 
-                    int insertedId = Convert.ToInt32(
-                        parameters.First(p => p.ParameterName == "@newId").Value
-                    );
 
                     totalRowsAffected += rows;
                 }
@@ -136,6 +115,55 @@ namespace WebTMAIntegration.Data
                 await transaction.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task<List<FloorViewModel>> GetFloorsAsync()
+        {
+            DataTable dt =
+                await _db.ExecuteQueryAsync(
+                    "usp_GetFloors",
+                    CommandType.StoredProcedure
+                );
+
+            List<FloorViewModel> floors =
+                new List<FloorViewModel>();
+
+            if (dt.Rows.Count == 0)
+            {
+                return floors;
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                floors.Add(new FloorViewModel
+                {
+                    FloorId = row["FloorId"] != DBNull.Value
+                        ? Convert.ToInt32(row["FloorId"]) : 0,
+
+                    SiteName = row["SiteName"]?.ToString(),
+
+                    SiteCode = row["SiteCode"]?.ToString(),
+
+                    BuildingName = row["BuildingName"]?.ToString(),
+
+                    BuildingCode = row["BuildingCode"]?.ToString(),
+
+                    FloorCode = row["FloorCode"]?.ToString(),
+
+                    FloorName = row["FloorName"]?.ToString(),
+
+                    Address = row["Address"]?.ToString(),
+
+                    IsActive = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"]),
+
+                    CreatedBy = row["CreatedBy"] != DBNull.Value
+                        ? Convert.ToInt32(row["CreatedBy"]) : 0,
+
+                    CreateDate = (DateTime)row["CreateDate"]
+                });
+            }
+
+            return floors;
         }
 
     }

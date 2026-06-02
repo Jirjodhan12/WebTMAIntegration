@@ -12,12 +12,14 @@
 
                 <thead class="table-dark">
                     <tr>
-                        <th>Site Type</th>
-                        <th>Region</th>
+                        <th>Site Id</th>
+                        <th>Region Id</th>
                         <th>Campus Name</th>
                         <th>Campus Code</th>
                         <th>Description</th>
                         <th>Status</th>
+                        <th>Address</th>
+                        <th>CreatedDate</th>
                     </tr>
                 </thead>
 
@@ -28,19 +30,19 @@
                         <tr>
 
                             <td>
-                                @(string.IsNullOrWhiteSpace(item.SiteType)  ? "-" : item.SiteType)
+                                @(item.SiteId.ToString() ?? "-")
                             </td>
 
                             <td>
-                                @(string.IsNullOrWhiteSpace(item.Region) ? "-" : item.Region)
+                                @(item.RegionsId.ToString() ?? "-")
                             </td>
 
                             <td>
-                                @(string.IsNullOrWhiteSpace(item.CampusName)  ? "-" : item.CampusName)
+                                @(string.IsNullOrWhiteSpace(item.Name)  ? "-" : item.Name)
                             </td>
 
                             <td>
-                                @(string.IsNullOrWhiteSpace(item.CampusCode)   ? "-"  : item.CampusCode)
+                                @(string.IsNullOrWhiteSpace(item.Code)   ? "-"  : item.Code)
                             </td>
 
                             <td>
@@ -48,7 +50,7 @@
                             </td>
 
                             <td>
-                                @if (item.Status)
+                                @if (item.IsActive)
                                 {
                                     <span class="badge bg-success">
                                         Active
@@ -60,6 +62,13 @@
                                         Inactive
                                     </span>
                                 }
+                            </td>
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.Address) ? "-" : item.Address)
+                            </td>
+
+                            <td>
+                                @(item.CreatedDate?.ToString("dd-MMM-yyyy") ?? "")
                             </td>
 
                         </tr>

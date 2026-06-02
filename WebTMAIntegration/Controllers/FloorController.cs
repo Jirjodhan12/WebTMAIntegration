@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebTMAIntegration.Data;
 using WebTMAIntegration.Data.Interfaces;
 using WebTMAIntegration.Mappers;
 using WebTMAIntegration.Services.Interfaces;
+using WebTMAIntegration.ViewModels;
 
 namespace WebTMAIntegration.Controllers
 {
@@ -15,28 +17,20 @@ namespace WebTMAIntegration.Controllers
             _floorService = floorService;
             _floorRepository = floorRepository;
         }
-        public async Task<IActionResult> Index(
-            int pageIndex = 0,
-            int pageSize = 100)
+        public async Task<IActionResult> Index()
         {
 
-            var columns = new List<string>
+            try
             {
-                "id",
-                "buildingId",
-                "buildingCode",
-                "floorTypeId",
-                "floorUniqueId",
-                "name",
-                "active",
-                "creatorId",
-                "createdDate",
-                "modifierId",
-                "modifiedDate"
-            };
-            var floors = await _floorService.GetFloorAsync(pageIndex, pageSize, columns);
+                var floors = await _floorRepository.GetFloorsAsync();
+                return View(floors);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.InnerException?.Message ?? ex.Message;
 
-            return View(floors);
+                return View(new List<FloorViewModel>());
+            }
         }
 
         public async Task<IActionResult> Sync()
@@ -44,7 +38,7 @@ namespace WebTMAIntegration.Controllers
             try
             {
                 int pageIndex = 0;
-                int pageSize = 100;
+                int pageSize = 1000;
                 var columns = new List<string>
                 {
                     "id",
@@ -56,8 +50,6 @@ namespace WebTMAIntegration.Controllers
                     "active",
                     "creatorId",
                     "createdDate",
-                    "modifierId",
-                    "modifiedDate"
                 };
 
                 var floors = await _floorService.GetFloorAsync(pageIndex, pageSize, columns);

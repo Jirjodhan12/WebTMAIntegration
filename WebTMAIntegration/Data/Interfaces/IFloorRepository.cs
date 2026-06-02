@@ -1,9 +1,11 @@
 ﻿using WebTMAIntegration.Models.Entities;
+using WebTMAIntegration.ViewModels;
 
 namespace WebTMAIntegration.Data.Interfaces
 {
     public interface IFloorRepository
     {
-        public Task<int> SaveFloorsAsync(List<FloorEntity> buildings);
+        Task<int> SaveFloorsAsync(List<FloorEntity> buildings);
+        Task<List<FloorViewModel>> GetFloorsAsync();
     }
 }

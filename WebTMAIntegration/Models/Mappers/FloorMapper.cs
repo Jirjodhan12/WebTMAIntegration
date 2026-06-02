@@ -23,7 +23,7 @@ namespace WebTMAIntegration.Mappers
                     ? "test"
                     : dto.BuildingCode,
 
-                Alias = "test",
+                Alias = "test Alias",
 
                 FloorName = string.IsNullOrWhiteSpace(dto.Name)
                     ? "test"
@@ -33,17 +33,8 @@ namespace WebTMAIntegration.Mappers
 
                 IsActive = dto.Active ?? false,
 
-                CreatedBy = dto.CreatorId ?? 1,
+                CreatedBy = dto.CreatorId ?? 1
 
-                CreateDate = dto.CreatedDate ?? DateTime.Now,
-
-                UpdatedBy = dto.ModifierId ?? 1,
-
-                UpdatedDate = dto.ModifiedDate ?? DateTime.Now,
-
-                IsSyncRequired = false,
-
-                IsBuildingFloor = false
             };
         }
     }

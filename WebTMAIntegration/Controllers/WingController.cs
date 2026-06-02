@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebTMAIntegration.Data;
 using WebTMAIntegration.Data.Interfaces;
 using WebTMAIntegration.Models.Mappers;
 using WebTMAIntegration.Services.Interfaces;
+using WebTMAIntegration.ViewModels;
 
 namespace WebTMAIntegration.Controllers
 {
@@ -16,28 +18,19 @@ namespace WebTMAIntegration.Controllers
             _wingService = wingService;
             _wingRepository = wingRepository;
         }
-        public async Task<IActionResult> Index(
-            int pageIndex = 0,
-            int pageSize = 100)
+        public async Task<IActionResult> Index()
         {
-
-            var columns = new List<string>
+            try
             {
-                "id",
-                "floorId",
-                "name",
-                "active",
-                "creatorId",
-                "createdDate",
-                "areaTypeId",
-                "code",
-                "floorCode",
-                "modifiedDate",
-                "modifierId"
-            };
-            var wings = await _wingService.GetWingAsync(pageIndex, pageSize, columns);
+                var wings = await _wingRepository.GetWingsAsync();
+                return View(wings);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.InnerException?.Message ?? ex.Message;
 
-            return View(wings);
+                return View(new List<WingViewModel>());
+            }
         }
 
         public async Task<IActionResult> Sync()
@@ -56,9 +49,7 @@ namespace WebTMAIntegration.Controllers
                     "createdDate",
                     "areaTypeId",
                     "code",
-                    "floorCode",
-                    "modifiedDate",
-                    "modifierId"
+                    "floorCode"
                 };
                 var wings = await _wingService.GetWingAsync(pageIndex, pageSize, columns);
 

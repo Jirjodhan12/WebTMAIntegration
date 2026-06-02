@@ -41,13 +41,7 @@ namespace WebTMAIntegration.Models.Mappers
                 SiteAbbreviation = !string.IsNullOrWhiteSpace(dto?.Code)
                     ? dto.Code
                     : "TEST",
-
-                IsInternal = false,
-                IsPrimary = false,
-                CreatedBy = 1,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow,
-                IsSyncRequired = false
+                CreatedBy = 1
             };
         }
     }

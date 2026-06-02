@@ -150,26 +150,16 @@ namespace WebTMAIntegration.Data
                 {
                     SqlParameter[] parameters =
                     {
-                        new SqlParameter("@CreatedBy", SqlDbType.Int)
+                       
+
+                        new SqlParameter("@BuildingId", SqlDbType.Int)
                         {
-                            Value = building.CreatedBy ?? 1
+                            Value = building.BuildingId
                         },
 
-                        new SqlParameter("@BuildingTypeId", SqlDbType.Int)
+                        new SqlParameter("@SiteId", SqlDbType.Int)
                         {
-                            Value = building.BuildingTypeId
-                        },
-
-                        new SqlParameter("@BuildingName", SqlDbType.NVarChar, -1)
-                        {
-                            Value = string.IsNullOrWhiteSpace(building.BuildingName)
-                                ? (object)DBNull.Value
-                                : building.BuildingName
-                        },
-
-                        new SqlParameter("@IsActive", SqlDbType.Bit)
-                        {
-                            Value = building.IsActive
+                            Value = building.SiteId
                         },
 
                         new SqlParameter("@SiteCode", SqlDbType.NVarChar, 100)
@@ -179,16 +169,28 @@ namespace WebTMAIntegration.Data
                                 : building.SiteCode
                         },
 
+                         new SqlParameter("@CityId", SqlDbType.Int)
+                        {
+                            Value = building.CityId ?? (object)DBNull.Value
+                        },
+
+                        new SqlParameter("@BuildingName", SqlDbType.NVarChar, -1)
+                        {
+                            Value = string.IsNullOrWhiteSpace(building.BuildingName)
+                                ? (object)DBNull.Value
+                                : building.BuildingName
+                        },
+
+                         new SqlParameter("@BuildingTypeId", SqlDbType.Int)
+                        {
+                            Value = building.BuildingTypeId
+                        },
+
                         new SqlParameter("@BuildingCode", SqlDbType.NVarChar, 10)
                         {
                             Value = string.IsNullOrWhiteSpace(building.BuildingCode)
                                 ? (object)DBNull.Value
                                 : building.BuildingCode
-                        },
-
-                        new SqlParameter("@CityId", SqlDbType.Int)
-                        {
-                            Value = building.CityId ?? (object)DBNull.Value
                         },
 
                         new SqlParameter("@Address", SqlDbType.NVarChar, 150)
@@ -198,63 +200,30 @@ namespace WebTMAIntegration.Data
                                 : building.Address
                         },
 
-                        new SqlParameter("@ShiftIds", SqlDbType.NVarChar, -1)
+                        new SqlParameter("@IsActive", SqlDbType.Bit)
                         {
-                            Value = string.IsNullOrWhiteSpace(building.ShiftIds)
-                                ? (object)DBNull.Value
-                                : building.ShiftIds
+                            Value = building.IsActive
                         },
 
-                        // Not available in entity
-                        new SqlParameter("@UserId", SqlDbType.NVarChar, -1)
+                        new SqlParameter("@RegionId", SqlDbType.Int)
                         {
-                            Value = ""
+                            Value = building.RegionId ?? 1
                         },
 
-                        new SqlParameter("@IsSyncRequired", SqlDbType.Bit)
+                        new SqlParameter("@CreatedBy", SqlDbType.Int)
                         {
-                            Value = building.IsSyncRequired ?? (object)DBNull.Value
+                            Value = building.CreatedBy ?? 1
                         },
-
-                        // Not available in entity
-                        new SqlParameter("@IsExcluded", SqlDbType.Bit)
-                        {
-                            Value = !building.IsActive
-                        },
-
-                        // Not available in entity
-                        new SqlParameter("@ExcludedReason", SqlDbType.NVarChar, 150)
-                        {
-                            Value = DBNull.Value
-                        },
-
-                        new SqlParameter("@IsFireDrillApplicable", SqlDbType.Bit)
-                        {
-                            Value = building.IsFireDrillApplicable ?? (object)DBNull.Value
-                        },
-
-                        new SqlParameter("@FireDrillBuildingStartDate", SqlDbType.DateTime)
-                        {
-                            Value = building.FireDrillBuildingStartDate ?? (object)DBNull.Value
-                        },
-
-                        new SqlParameter("@newId", SqlDbType.Int)
-                        {
-                            Direction = ParameterDirection.Output
-                        }
                     };
 
                     int rows = await _db.ExecuteNonQueryAsync(
-                        query: "Insert_Building",
+                        query: "usp_InsertBuilding",
                         commandType: CommandType.StoredProcedure,
                         parameters: parameters,
                         connection: conn,
                         transaction: transaction
                     );
 
-                    int insertedId = Convert.ToInt32(
-                        parameters.First(p => p.ParameterName == "@newId").Value
-                    );
 
                     totalRowsAffected += rows;
                 }
@@ -271,11 +240,11 @@ namespace WebTMAIntegration.Data
         }
 
         // GET ALL
-       /* public async Task<List<BuildingViewModel>> GetBuildingAsync()
+       public async Task<List<BuildingViewModel>> GetBuildingsAsync()
         {
             DataTable dt =
                 await _db.ExecuteQueryAsync(
-                    "Get_Buildings_Test",
+                    "usp_GetBuildings",
                     CommandType.StoredProcedure
                 );
 
@@ -291,18 +260,32 @@ namespace WebTMAIntegration.Data
             {
                 buildings.Add(new BuildingViewModel
                 {
-                    Id = row["Id"] != DBNull.Value
-                        ? Convert.ToInt32(row["Id"]) : 0,
+                    BuildingId = row["BuildingId"] != DBNull.Value
+                        ? Convert.ToInt32(row["BuildingId"]) : 0,
 
-                    Name = row["Name"]?.ToString(),
+                    SiteName = row["SiteName"]?.ToString(),
 
-                    Code = row["Code"]?.ToString(),
+                    SiteCodeValue = row["SiteCodeValue"]?.ToString(),
 
-                    Active = row["Active"] != DBNull.Value && Convert.ToBoolean(row["Active"])
+                    BuildingName = row["BuildingName"]?.ToString(),
+
+                    BuildingCode = row["BuildingCode"]?.ToString(),
+
+                    BuildingTypeId = row["BuildingTypeId"] != DBNull.Value
+                        ? Convert.ToInt32(row["BuildingTypeId"]) : 0,
+
+                    Address = row["Address"]?.ToString(),
+
+                    IsActive = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"]),
+
+                    CreatedBy = row["CreatedBy"] != DBNull.Value
+                        ? Convert.ToInt32(row["CreatedBy"]) : 0,
+
+                    CreateDate = (DateTime)row["CreateDate"]
                 });
             }
 
             return buildings;
-        }*/
+        }
     }
 }

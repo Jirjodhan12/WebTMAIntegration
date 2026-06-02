@@ -14,6 +14,8 @@ namespace WebTMAIntegration.Models.Mappers
 
                 SiteCode = dto.FacilityCode ?? "test",
 
+                SiteId = dto.facilityId ?? 1,
+
                 CityId = dto.DivisionId ?? 1,
 
                 BuildingTypeId = dto.BuildingTypeId,
@@ -31,21 +33,6 @@ namespace WebTMAIntegration.Models.Mappers
                 CreatedBy = dto.CreatorId,
 
                 CreateDate = dto.CreatedDate ?? DateTime.UtcNow,
-
-                UpdatedBy = dto.ModifierId ?? 1,
-
-                UpdatedDate = dto.ModifiedDate,
-
-                // Not Available In DTO
-                TMSReference = "test",
-
-                ShiftIds = "test",
-
-                IsSyncRequired = false,
-
-                IsFireDrillApplicable = false,
-
-                FireDrillBuildingStartDate = DateTime.UtcNow
             };
         }
     }

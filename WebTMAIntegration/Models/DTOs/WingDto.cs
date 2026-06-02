@@ -19,9 +19,5 @@
         public string? Code { get; set; }
 
         public string? FloorCode { get; set; }
-
-        public DateTime? ModifiedDate { get; set; }
-
-        public int? ModifierId { get; set; }
     }
 }

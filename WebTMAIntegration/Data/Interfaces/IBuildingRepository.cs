@@ -8,6 +8,6 @@ namespace WebTMAIntegration.Data.Interfaces
     {
         //public Task<int> SaveBuildingAsync(BuildingEntity building);
         public Task<int> SaveBuildingsAsync(List<BuildingEntity> buildings);
-       // public Task<List<BuildingViewModel>> GetBuildingAsync();
+        public Task<List<BuildingViewModel>> GetBuildingsAsync();
     }
 } 

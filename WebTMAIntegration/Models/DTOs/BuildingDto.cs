@@ -6,6 +6,7 @@
 
         public string? FacilityCode { get; set; }
 
+        public int? facilityId { get; set; }
         public int? DivisionId { get; set; }
 
         public int BuildingTypeId { get; set; }
@@ -25,9 +26,5 @@
         public int? CreatorId { get; set; }
 
         public DateTime? CreatedDate { get; set; }
-
-        public int? ModifierId { get; set; }
-
-        public DateTime? ModifiedDate { get; set; }
     }
 }

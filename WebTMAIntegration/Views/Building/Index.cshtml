@@ -1,10 +1,10 @@
-﻿@model PagedResponseModel<BuildingDto>
+﻿@model List<BuildingViewModel>
 
 <div class="container mt-4">
 
     <h2 class="mb-3">Buildings</h2>
 
-    @if (Model?.Data != null && Model.Data.Any())
+    @if (Model != null && Model.Any())
     {
         <div class="table-responsive">
 
@@ -12,89 +12,71 @@
 
                 <thead class="table-dark">
                     <tr>
-                        <th>Id</th>
-                        <th>Facility Code</th>
-                        <th>Division Id</th>
-                        <th>Building Type</th>
-                        <th>Code</th>
-                        <th>Name</th>
+                        <th>Building Id</th>
+                        <th>Campus Name</th>
+                        <th>Campus Code</th>
+                        <th>Building Name</th>
+                        <th>Buiding Code</th>
+                        <th>Building Type Id</th>
                         <th>Address</th>
-                        <th>Region Id</th>
                         <th>Created By</th>
                         <th>Created Date</th>
-                        <th>Modified By</th>
-                        <th>Modified Date</th>
                         <th>Status</th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    @foreach (var item in Model.Data)
+                    @foreach (var item in Model)
                     {
                         <tr>
 
-                            <td>@item.Id</td>
+                            <td>@item.BuildingId</td>
 
                             <td>
-                                @(string.IsNullOrWhiteSpace(item.FacilityCode)
-                                    ? "TEST-FACILITY"
-                                    : item.FacilityCode)
+                                @(string.IsNullOrWhiteSpace(item.SiteName)
+                                    ? "TEST-CAMPUS" : item.SiteName)
+                            </td>
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.SiteCodeValue)
+                                    ? "TEST-CODE" : item.SiteCodeValue)
                             </td>
 
                             <td>
-                                @(item.DivisionId ?? 1)
+                                @(string.IsNullOrWhiteSpace(item.BuildingName)
+                                    ? "TEST-BUILDING" : item.BuildingName)
+                            </td>
+
+                            <td>
+                                @(string.IsNullOrWhiteSpace(item.BuildingCode)
+                                    ? "TEST-BUILDING" : item.BuildingCode)
                             </td>
 
                             <td>
                                 @item.BuildingTypeId
                             </td>
 
-                            <td>
-                                @(string.IsNullOrWhiteSpace(item.Code)
-                                    ? "TEST-CODE"
-                                    : item.Code)
-                            </td>
-
-                            <td>
-                                @(string.IsNullOrWhiteSpace(item.Name)
-                                    ? "Test Building"
-                                    : item.Name)
-                            </td>
 
                             <td>
                                 @(
-                                    string.IsNullOrWhiteSpace(item.Address1) &&
-                                    string.IsNullOrWhiteSpace(item.Address2)
+                                    string.IsNullOrWhiteSpace(item.Address) 
                                     ? "-"
-                                    : $"{item.Address1} {item.Address2}".Trim()
+                                    : item.Address
                                     )
                             </td>
 
-                            
 
                             <td>
-                                @(item.RegionId ?? 1)
+                                @item.CreatedBy
                             </td>
 
                             <td>
-                                @item.CreatorId
+                                @(item.CreateDate.ToString("dd-MMM-yyyy") ?? "")
                             </td>
 
-                            <td>
-                                @(item.CreatedDate?.ToString("dd-MMM-yyyy") ?? "")
-                            </td>
 
                             <td>
-                                @(item.ModifierId ?? 1)
-                            </td>
-
-                            <td>
-                                @(item.ModifiedDate?.ToString("dd-MMM-yyyy") ?? "-")
-                            </td>
-
-                            <td>
-                        @if (item.Active)
+                                @if (item.IsActive == true)
                                 {
                                     <span class="badge bg-success">
                                         Active
