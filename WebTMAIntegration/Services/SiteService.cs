@@ -16,7 +16,7 @@ namespace WebTMAIntegration.Services
 
         public Task<PagedResponseModel<SiteDto>> GetSiteAsync(
             int pageIndex = 0,
-            int pageSize = 100,
+            int pageSize = 1000,
             List<string>? columns = null)
         {
             var url = $"Facilities?pageIndex={pageIndex}&pageSize={pageSize}";

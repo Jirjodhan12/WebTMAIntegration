@@ -29,6 +29,8 @@ builder.Services.AddScoped<IFloorService, FloorService>();
 builder.Services.AddScoped<IFloorRepository, FloorRepository>();
 builder.Services.AddScoped<IWingService, WingService>();
 builder.Services.AddScoped<IWingRepository, WingRepository>();
+builder.Services.AddScoped<IAssetService, AssetService>();
+builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 
 
 var app = builder.Build();

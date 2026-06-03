@@ -102,6 +102,21 @@
             </form>
         </div>
 
+        @* Equipment Type and Sub Type Sync *@
+        <div class="col-md-3 mb-3">
+            <form asp-controller="Asset"
+                  asp-action="Sync"
+                  method="post">
+
+                <button type="submit"
+                        class="btn btn-danger w-100 p-3 shadow-sm">
+
+                    Sync Equipment Type & Sub Type
+
+                </button>
+            </form>
+        </div>
+
     </div>
 
 </div>
